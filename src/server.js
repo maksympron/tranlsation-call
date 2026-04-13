@@ -3,12 +3,15 @@
   const path = require("path");
   const crypto = require("crypto");
   const { URL } = require("url");
+  const dotenv = require("dotenv");
   const twilio = require("twilio");
 
-  const { loadEnvFile } = require("./env");
+    dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+    dotenv.config({
+      path: path.resolve(process.cwd(), ".env.local"),
+      override: true,
+    });
   const azureAdapter = require("./azureAdapter");
-
-  loadEnvFile();
 
   const PORT = Number(process.env.PORT || process.env.TWILIO_CALLS_PORT || 8787);
   const HOST = process.env.HOST || "0.0.0.0";

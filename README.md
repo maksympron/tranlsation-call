@@ -40,10 +40,14 @@ This is not a full real-time duplex interpreter. It is:
 
 ```sh
 cp .env.example .env
+npm install
 npm start
 ```
 
-The service uses only built-in Node.js modules, so `npm install` is not required.
+Environment variables are loaded with `dotenv` from:
+
+1. `.env`
+2. `.env.local` with override enabled
 
 ## Example
 
@@ -84,5 +88,4 @@ curl http://localhost:8787/api/sessions/<session-id>
 - no server-side app audio streaming
 - PSTN side is turn-based because it uses `Twilio <Record>`
 - Twilio `<Say>` support depends on target language availability
-- for a clean deploy, set `AZURE_TRANSLATOR_KEY` in env even though local dev can fall back to the sibling app repo
 # tranlsation-call

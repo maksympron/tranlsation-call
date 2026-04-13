@@ -1,7 +1,3 @@
-const { loadEnvFile } = require("./env");
-
-loadEnvFile();
-
 const DEFAULT_TRANSLATOR_REGION = process.env.AZURE_REGION;
 const DEFAULT_SPEECH_REGION = process.env.AZURE_REGION;
 const DEFAULT_NO_MATCH_RESULT = {
