@@ -111,6 +111,20 @@ class TwilioService {
     }
   }
 
+  async completeCall(callSid) {
+    try {
+      return await this.getClient().calls(callSid).update({ status: "completed" });
+    } catch (error) {
+      const details = this.serializeError(error);
+      throw createTwilioError(
+        `Failed to complete Twilio call ${callSid}${
+          details.status ? ` (${details.status})` : ""
+        }: ${details.message}`,
+        error
+      );
+    }
+  }
+
   async downloadRecordingWav(recordingSid) {
     this.ensureCredentials();
     const wavUrl = `https://api.twilio.com/2010-04-01/Accounts/${this.accountSid}/Recordings/${recordingSid}.wav`;

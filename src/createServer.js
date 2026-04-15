@@ -231,6 +231,27 @@ function createServer({
         return;
       }
 
+      if (
+        req.method === "POST" &&
+        pathname.startsWith("/api/sessions/") &&
+        pathname.endsWith("/end-call")
+      ) {
+        const sessionId = getSessionIdFromPath(pathname);
+        const session = sessionId ? sessionStore.get(sessionId) : null;
+
+        if (!session) {
+          notFound(res);
+          return;
+        }
+
+        await directConversationService.endCall(session);
+        sendJson(res, 200, {
+          ok: true,
+          session: sessionStore.serialize(session),
+        });
+        return;
+      }
+
       notFound(res);
     } catch (error) {
       const statusCode = Number(error?.statusCode || 0) || 500;

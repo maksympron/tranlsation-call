@@ -373,6 +373,36 @@ ${speechVerb.twiml}
     return twilioCall;
   }
 
+  async endCall(session) {
+    if (!session?.directLoop?.callSid) {
+      session.directLoop.callStatus = "completed";
+      session.directLoop.inFlight = false;
+      session.directLoop.remoteTurnArmed = false;
+      session.directLoop.lastError = null;
+      this.sessionStore.appendEvent(session, "call_end_requested", {
+        callSid: null,
+        result: "no_active_call",
+      });
+      return null;
+    }
+
+    const completedCall = await this.twilioService.completeCall(
+      session.directLoop.callSid
+    );
+    session.directLoop.callStatus = completedCall.status || "completed";
+    session.directLoop.inFlight = false;
+    session.directLoop.remoteTurnArmed = false;
+    session.directLoop.lastError = null;
+    session.status = "direct_call_ended";
+
+    this.sessionStore.appendEvent(session, "call_end_requested", {
+      callSid: session.directLoop.callSid,
+      result: session.directLoop.callStatus,
+    });
+
+    return completedCall;
+  }
+
   async waitForNewRecording(callSid, knownRecordingSids = [], timeoutMs) {
     const startedAt = Date.now();
     const knownSet = new Set(knownRecordingSids);
